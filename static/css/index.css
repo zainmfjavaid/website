@@ -1,0 +1,23 @@
+.left {
+    margin-left: 10%;
+}
+
+.landing-top {
+    display: flex;
+    flex-direction: row;
+    column-gap: 50px;
+    align-items: center;
+    margin-top: 30px;
+}
+
+.landing-logo {
+    width: 125px;
+    height: 125px;
+}
+
+.title-big {
+    font-family: "english-grotesque", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 50px;
+}
