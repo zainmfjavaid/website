@@ -30,9 +30,19 @@ def portal_login():
 @app.route('/portal')
 def portal():
     if session.get('is_logged_in'):
-        return render_template('cms_portal.html')
+        return render_template('portal.html')
     else:
         return redirect('/portal/login')
+    
+@app.route('/portal/media')
+def portal_media():
+    return 'Media'
+    # return render_template('portal_media.html')
+
+@app.route('/portal/profile')
+def portal_profile():
+    return 'Profile'
+    # return render_template('portal_profile.html')
 
 @app.route('/portal/logout')
 def portal_logout():

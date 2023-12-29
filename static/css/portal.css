@@ -1,0 +1,38 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    row-gap: 100px;
+    align-items: center;
+    height: 90vh;
+    width: 85px;
+    padding-top: 10vh;
+    background-color: lightblue;
+}
+
+#profile-icon-container {
+    position: absolute;
+    bottom: 10vh;
+}
+
+.unset-a {
+    all: unset;
+}
+
+.unset-a:hover {
+    cursor: pointer;
+}
+
+.opacity-hover:hover {
+    cursor: pointer;
+    transition: all 0.35s ease-in-out;
+    opacity: 0.5;
+}
+
+.selected {
+    color: blue;
+}
