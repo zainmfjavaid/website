@@ -117,3 +117,21 @@ html, body {
     transition: all 0.6s ease-in-out;
     opacity: 0.5;
 }
+
+@media screen and (max-width: 535px) {
+    #login-bounding-box {
+        grid-template-columns: 100%;
+    }
+
+    #left {
+        display: none;
+    }
+
+    .input {
+        width: 70%;
+    }
+
+    .submit {
+        width: calc(70% + 40px);
+    }
+}
