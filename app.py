@@ -41,8 +41,7 @@ def portal_media():
 
 @app.route('/portal/profile')
 def portal_profile():
-    return 'Profile'
-    # return render_template('portal_profile.html')
+    return render_template('portal_profile.html')
 
 @app.route('/portal/logout')
 def portal_logout():

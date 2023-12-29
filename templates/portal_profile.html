@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>How It Works | Creator Profile</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/portal.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+        <script src="https://kit.fontawesome.com/b612a3a6e6.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://use.typekit.net/inw0enr.css">
+    </head>
+    <body>
+        <div class="sidebar">
+            <a href="/portal" class="unset-a" title="home"><i class="fa-solid fa-house fa-2xl opacity-hover"></i></a>
+            <a href="/portal/media" class="unset-a" title="media"><i class="fa-solid fa-image fa-2xl opacity-hover"></i></a>
+            <div id="profile-icon-container">
+                <a href="/portal/profile" class="unset-a" title="profile"><i class="fa-solid fa-user fa-2xl opacity-hover selected"></i></a>
+            </div>
+        </div>
+        <div id="logout-container" style="background-image: url('{{ url_for('static', filename='images/pastel_gradient.png') }}'); background-size: cover;">
+            <div id="logout-bounding-box">
+                <div id="logo-container" onclick="window.location.href='/'">
+                    <img src="{{ url_for('static', filename='images/gear_icon.png') }}" class="landing-logo">
+                    <p class="logo-type">HOW IT WORKS</p>
+                </div>
+                <hr class="line">
+                <div id="button-container">
+                    <button id="sign-out-button" class="opacity-hover" onclick="window.location.href='/portal/logout'">Sign Out</button>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.addEventListener('load', () => {
+                document.getElementById('logout-bounding-box').classList.add('visible');
+            });
+        </script>        
+    </body>
+</html>
