@@ -1,0 +1,109 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+#center-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#login-bounding-box {
+    display: grid;
+    grid-template-columns: 55% 45%;
+    background-color: #fff;
+    height: 80vh;
+    width: 80vw;
+    border-radius: 25px;
+}
+
+#left {
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+    background-color: blue;
+    color: #fff;
+}
+
+#logo-container {
+    display: flex;
+    flex-direction: row;
+    column-gap: 15px;
+    margin: 5% 0px 0px 5%;
+}
+
+.landing-logo {
+    filter: invert(100%);
+    width: 75px;
+    height: 75px;
+}
+
+.logo-type {
+    font-family: "english-grotesque", sans-serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 25px;
+    align-self: center;
+}
+
+#welcome-container {
+    display: flex;
+    margin-top: 10%;
+    text-align: center;
+    flex-direction: column;
+}
+
+.large-text {
+    font-weight: 800;
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.caption-text {
+    margin-top: 0px;
+    font-weight: 400;
+    font-size: 17px;
+    color: rgb(228, 228, 228);
+}
+
+.sign-in-text {
+    margin-top: 20%;
+    margin-left: 7.5%;
+    font-weight: 600;
+    color: rgb(66, 66, 66);
+}
+
+#auth-form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+    margin: 10% 0px 0px 7.5%;
+}
+
+.input {
+    width: 60%;
+    height: 50px;
+    border-radius: 25px;
+    border-width: 0.5px;
+    padding: 0px 20px 0px 20px;
+    font-size: 15px;
+}
+
+.submit {
+    background-color: #b0ece4;
+    width: calc(60% + 40px);
+    margin-top: 55px;
+    height: 50px;
+    border-color: transparent;
+    border-radius: 25px;
+    font-size: 15px;
+}
+
+.submit:hover {
+    cursor: pointer;
+    transition: all 0.6s ease-in-out;
+    opacity: 0.5;
+}

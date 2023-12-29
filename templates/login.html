@@ -7,12 +7,32 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
         <link rel="stylesheet" href="https://use.typekit.net/inw0enr.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <form action="/portal/login" method="POST">
-            <input type="text" name="username" required autofocus placeholder="username" autocomplete="off">
-            <input type="password" name="password" required placeholder="password" autocomplete="off">
-            <input type="submit" style="width:100px; height:50px; background-color:blue">
-        </form>
+    <body style="background-image: url('{{ url_for('static', filename='images/pastel_gradient.png') }}'); background-size: cover;">
+        <div id="center-container">
+            <div id="login-bounding-box">
+                <div id="left">
+                    <div id="logo-container">
+                        <img src="{{ url_for('static', filename='images/gear_icon.png') }}" class="landing-logo">
+                        <p class="logo-type">HOW IT WORKS</p>
+                    </div>
+                    <div id="welcome-container">
+                        <p class="large-text">Welcome Back!</p>
+                        <p class="caption-text">Please sign in using your creator credentials</p>
+                    </div>
+                </div>
+                <div id="right">
+                    <p class="large-text sign-in-text">Sign In</p>
+                    <form id="auth-form" action="/portal/login" method="POST">
+                        <input class="input" type="text" name="username" required autofocus placeholder="Username" autocomplete="off">
+                        <input class="input" type="password" name="password" required placeholder="Password" autocomplete="off">
+                        <input class="submit" type="submit">
+                    </form>        
+                </div>
+            </div>
+        </div>
     </body>
 </html>

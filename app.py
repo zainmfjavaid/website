@@ -18,7 +18,7 @@ def portal_login():
         username = request.form['username']
         password = request.form['password']
         session['is_logged_in'] = True
-        print('here')
+        
         return redirect('/portal')
     else:
         return render_template('login.html')
@@ -28,7 +28,6 @@ def portal():
     if session.get('is_logged_in'):
         return render_template('cms_portal.html')
     else:
-        print('redirecting back')
         return redirect('/portal/login')
 
 @app.route('/portal/logout')
