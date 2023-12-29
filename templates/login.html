@@ -28,11 +28,25 @@
                     <p class="large-text sign-in-text">Sign In</p>
                     <form id="auth-form" action="/portal/login" method="POST">
                         <input class="input" type="text" name="username" required autofocus placeholder="Username" autocomplete="off">
-                        <input class="input" type="password" name="password" required placeholder="Password" autocomplete="off">
+                        <input class="input" type="password" name="password" id="password" required placeholder="Password" autocomplete="off">
+                        <div id="show-password">
+                            <input type="checkbox" id="show-password">
+                            <label for="show-password" class="label-text">Show Password</label>
+                        </div>
                         <input class="submit" type="submit">
                     </form>        
                 </div>
             </div>
         </div>
+        <script>
+            document.getElementById('show-password').addEventListener('click', function (e) {
+                var passwordInput = document.getElementById('password');
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                } else {
+                    passwordInput.type = 'password';
+                }
+            });
+        </script>        
     </body>
 </html>

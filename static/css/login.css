@@ -71,7 +71,7 @@ html, body {
 
 .sign-in-text {
     margin-top: 20%;
-    margin-left: 7.5%;
+    margin-left: 15%;
     font-weight: 600;
     color: rgb(66, 66, 66);
 }
@@ -80,7 +80,7 @@ html, body {
     display: flex;
     flex-direction: column;
     row-gap: 15px;
-    margin: 10% 0px 0px 7.5%;
+    margin: 10% 0px 0px 15%;
 }
 
 .input {
@@ -92,10 +92,20 @@ html, body {
     font-size: 15px;
 }
 
+#show-password {
+    display: flex;
+    align-items: center;
+    column-gap: 4px;
+}
+
+.label-text {
+    font-size: 14px;
+}
+
 .submit {
     background-color: #b0ece4;
     width: calc(60% + 40px);
-    margin-top: 55px;
+    margin-top: 25px;
     height: 50px;
     border-color: transparent;
     border-radius: 25px;
