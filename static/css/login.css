@@ -19,6 +19,7 @@ html, body {
     height: 80vh;
     width: 80vw;
     border-radius: 25px;
+    min-height: 600px;
 }
 
 #left {
@@ -122,6 +123,28 @@ html, body {
     cursor: pointer;
     transition: all 0.6s ease-in-out;
     opacity: 0.5;
+}
+
+#incorrect-attempt {
+    display: grid;
+    grid-template-columns: 1% 99%;
+    margin: 10% 0px 0px 15%;
+    width: 60%;
+    background-color: #efefef;
+}
+
+#red-stripe {
+    background-color: red;
+    height: 100%;
+    min-width: 2.5px;
+}
+
+#incorrect-attempt-message {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 100%;
 }
 
 @media screen and (max-width: 535px) {

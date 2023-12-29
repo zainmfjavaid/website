@@ -34,7 +34,15 @@
                             <label for="show-password" class="label-text">Show Password</label>
                         </div>
                         <input class="submit" type="submit">
-                    </form>        
+                    </form>
+                    {% if bad_attempt %}
+                    <div id="incorrect-attempt">
+                        <div id="red-stripe"></div>
+                        <div id="incorrect-attempt-message">
+                            <p>Incorrect username or password</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         </div>
