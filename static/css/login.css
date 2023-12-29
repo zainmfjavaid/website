@@ -35,6 +35,12 @@ html, body {
     margin: 5% 0px 0px 5%;
 }
 
+#logo-container:hover {
+    cursor: pointer;
+    transition: all 0.35s ease-in-out;
+    opacity: 0.5;
+}
+
 .landing-logo {
     filter: invert(100%);
     width: 75px;
