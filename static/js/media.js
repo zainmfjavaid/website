@@ -7,16 +7,20 @@ document.addEventListener('DOMContentLoaded', () => {
         img.addEventListener('click', () => {
             expandedContainer.innerHTML = '';
 
+            const imageWrapper = document.createElement('div');
+            imageWrapper.className = 'image-wrapper';
+            expandedContainer.appendChild(imageWrapper);
+
             const expandedImg = img.cloneNode(true);
             expandedImg.className = 'expanded-image';
-            expandedContainer.appendChild(expandedImg);
+            imageWrapper.appendChild(expandedImg);
 
             const downloadBtn = document.createElement('a');
             downloadBtn.textContent = 'Download';
             downloadBtn.className = 'download-button';
             downloadBtn.href = img.src;
             downloadBtn.download = img.src.split('/').pop();
-            expandedContainer.appendChild(downloadBtn);
+            imageWrapper.appendChild(downloadBtn);
 
             expandedContainer.style.display = 'flex';
             document.body.classList.add('no-scroll');
