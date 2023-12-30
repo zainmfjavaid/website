@@ -36,11 +36,14 @@ def portal():
     
 @app.route('/portal/media')
 def portal_media():
-    return 'Media'
-    # return render_template('portal_media.html')
+    if not session.get('is_logged_in'):
+        return redirect('/portal/login')
+    return render_template('portal_media.html')
 
 @app.route('/portal/profile')
 def portal_profile():
+    if not session.get('is_logged_in'):
+        return redirect('/portal/login')
     return render_template('portal_profile.html')
 
 @app.route('/portal/logout')
