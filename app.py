@@ -38,7 +38,12 @@ def portal():
 def portal_media():
     if not session.get('is_logged_in'):
         return redirect('/portal/login')
-    return render_template('portal_media.html')
+    
+    full_media_paths = []
+    for media_file in os.listdir(os.environ['MEDIA_DIRECTORY_PATH']):
+        full_media_paths.append(os.path.join('/', os.environ['MEDIA_DIRECTORY_PATH'], media_file))
+    
+    return render_template('portal_media.html', media_files=full_media_paths)
 
 @app.route('/portal/profile')
 def portal_profile():
