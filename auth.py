@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import mysql.connector
 
 
-load_dotenv('secret.env')
+load_dotenv('config.env')
 
 class Database:
     def _setup_connection(self) -> None:
