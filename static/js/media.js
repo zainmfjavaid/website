@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    bindGalleryImages();
+});
+
+// Gallery rendering + image action handling
+function bindGalleryImages() {
     const expandedContainer = document.createElement('div');
     expandedContainer.className = 'expanded-image-container';
     document.body.appendChild(expandedContainer);
@@ -226,4 +231,75 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+}
+
+// Drag and drop + file upload handler
+document.addEventListener('DOMContentLoaded', () => {
+    const dropZone = document.getElementById('drop-zone');
+    setupDragAndDrop(dropZone);
 });
+
+function setupDragAndDrop(dropZone) {
+    document.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        showDropZone(dropZone);
+    });
+
+    document.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (e.relatedTarget === null) {
+            hideDropZone(dropZone);
+        }
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        hideDropZone(dropZone);
+        const files = Array.from(e.dataTransfer.files);
+        uploadFiles(files);
+    });
+}
+
+function showDropZone(dropZone) {
+    dropZone.style.display = 'block';
+}
+
+function hideDropZone(dropZone) {
+    dropZone.style.display = 'none';
+}
+
+function uploadFiles(files) {
+    const formData = new FormData();
+    files.forEach(file => {
+        if (file.type.startsWith('image/')) {
+            formData.append('files[]', file);
+        }
+    });
+
+    fetch('/portal/media/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.uploadedImages) {
+            updateGallery(data.uploadedImages);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+function updateGallery(uploadedImages) {
+    const mediaContainer = document.getElementById('media-container');
+    uploadedImages.forEach(imageUrl => {
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        img.className = 'gallery-image';
+        mediaContainer.appendChild(img);
+
+        bindGalleryImages();
+    });
+}

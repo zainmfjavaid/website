@@ -2,6 +2,7 @@ import os
 from auth import Database
 from dotenv import load_dotenv
 from utils.file_format import *
+from werkzeug.utils import secure_filename
 from flask import Flask, render_template, redirect, request, session
 
 
@@ -60,15 +61,32 @@ def portal_media_rename(action):
         
         if old_path != new_path:
             os.rename(old_path, new_path)
+            
+        return {'success':True, 'newUrl':'/'+new_path}
         
     elif action == 'delete':
         file_name = request.json.get('fileName')
+        
+        if not is_image_file(file_name):
+            file_name += '.png'
         full_file_path = os.path.join(os.environ['MEDIA_DIRECTORY_PATH'], file_name)
         
         os.remove(full_file_path)
-    
-    return {'success':True}
+        
+        return {'success':True}
 
+    elif action == 'upload':
+        uploaded_files = request.files.getlist("files[]")
+        new_image_paths = []
+        for file in uploaded_files:
+            if file and is_image_file(file.filename):
+                file_name = secure_filename(file.filename)
+                new_file_path = os.path.join(os.environ['MEDIA_DIRECTORY_PATH'], file_name)
+                file.save(new_file_path)
+                
+                new_image_paths.append('/' + new_file_path)
+        return {'success':True, 'uploadedImages':new_image_paths}
+    
 @app.route('/portal/profile')
 def portal_profile():
     if not session.get('is_logged_in'):

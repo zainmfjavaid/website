@@ -18,7 +18,9 @@
                 <a href="/portal/profile" class="unset-a" title="profile"><i class="fa-solid fa-user fa-2xl opacity-hover"></i></a>
             </div>
         </div>
+        <div id="drop-zone"></div>
         <div id="media-container">
+            Drop images here or click to upload.
             {% for media_file in media_files %}
                 <img src="{{ media_file }}" class="gallery-image">
             {% endfor %}
