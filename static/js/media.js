@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const noAnimation = urlParams.get('noAnimation');
+    if (noAnimation !== 'true') {
+        document.getElementById('media-container').classList.add('fade-in');
+    } else {
+        const newUrl = window.location.pathname;
+        window.history.pushState('object', document.title, newUrl);
+    }
+
     bindGalleryImages();
 });
 
@@ -310,7 +319,7 @@ function updateGallery(uploadedImages) {
         img.src = imageUrl;
         img.className = 'gallery-image';
         mediaContainer.appendChild(img);
-
-        bindGalleryImages();
     });
+
+    window.location.href = window.location.pathname + '?noAnimation=true';
 }

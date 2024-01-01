@@ -26,6 +26,9 @@ body.no-scroll {
     overflow-y: scroll;
     padding: 5vh 5vw 5vh 0vw;
     height: 90vh;
+}
+
+.fade-in {
     animation: fadeIn 0.5s ease-in-out forwards;
 }
 
