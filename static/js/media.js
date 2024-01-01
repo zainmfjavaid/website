@@ -1,3 +1,4 @@
+// Gallery rendering event listener
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const noAnimation = urlParams.get('noAnimation');
@@ -11,7 +12,23 @@ document.addEventListener('DOMContentLoaded', () => {
     bindGalleryImages();
 });
 
-// Gallery rendering + image action handling
+// File upload button event listener
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadButton = document.getElementById('upload-button');
+    const fileInput = document.getElementById('file-input');
+
+    uploadButton.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        if (fileInput.files.length > 0) {
+            uploadFiles(Array.from(fileInput.files));
+        }
+    });
+});
+
+// Image action handling
 function bindGalleryImages() {
     const expandedContainer = document.createElement('div');
     expandedContainer.className = 'expanded-image-container';

@@ -16,6 +16,57 @@ body.no-scroll {
     }
 }
 
+#upload-container {
+    display: flex;
+    align-items: center;
+    column-gap: 100px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+#upload-button {
+    display: flex;
+    flex-direction: column;
+    background-color: #007bff;
+    row-gap: 15px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    font-size: 15px;
+    padding: 20px 75px 0px 15px;
+}
+
+#drag-drop-text-container {
+    line-height: 1.25em;
+    width: 150px;
+}
+
+.drag-drop-text {
+    font-size: 15px;
+}
+
+.or-text {
+    font-size: 18px;
+    color: #b4b4b4;
+    font-weight: 600;
+}
+
+@media screen and (max-width: 900px) {
+    #upload-container {
+        column-gap: 50px;
+    }
+}
+
+@media screen and (max-width: 650px) {
+    .drag-drop-text {
+        display: none;
+    }
+
+    .or-text {
+        display: none;
+    }
+}
+
 #media-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, 200px);
@@ -26,6 +77,10 @@ body.no-scroll {
     overflow-y: scroll;
     padding: 5vh 5vw 5vh 0vw;
     height: 90vh;
+}
+
+#media-container > #upload-container {
+    grid-column: 1 / -1;
 }
 
 .fade-in {

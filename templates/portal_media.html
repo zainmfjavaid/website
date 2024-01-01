@@ -20,7 +20,17 @@
         </div>
         <div id="drop-zone"></div>
         <div id="media-container">
-            Drop images here or click to upload.
+            <div id="upload-container">
+                <button id="upload-button" class="opacity-hover">
+                    <i class="fa-solid fa-upload fa-lg"></i>
+                    <p>Upload</p>
+                </button>
+                <input type="file" id="file-input" accept="image/png, image/jpeg, image/tiff, image/webp, image/svg+xml" multiple style="display: none;">
+                <p class="or-text">OR</p>
+                <div id="drag-drop-text-container">
+                    <p class="drag-drop-text">Drag and drop an image to upload</p>
+                </div>
+            </div>
             {% for media_file in media_files %}
                 <img src="{{ media_file }}" class="gallery-image">
             {% endfor %}
