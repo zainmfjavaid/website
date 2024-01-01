@@ -42,17 +42,17 @@ document.addEventListener('DOMContentLoaded', () => {
             expandedContainer.appendChild(dropdownContent);
 
             const renameBtn = document.createElement('button');
-            renameBtn.textContent = 'Rename';
+            renameBtn.innerHTML = '<i class="fa-solid fa-edit"></i> Rename';
             renameBtn.className = 'dropdown-item';
             dropdownContent.appendChild(renameBtn);
 
             const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = 'Delete';
+            deleteBtn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete';
             deleteBtn.className = 'dropdown-item';
             dropdownContent.appendChild(deleteBtn);
 
             const dropdownDownloadButton = document.createElement('button');
-            dropdownDownloadButton.textContent = 'Download';
+            dropdownDownloadButton.innerHTML = '<i class="fa-solid fa-download"></i> Download';
             dropdownDownloadButton.className = 'dropdown-item';
             dropdownContent.appendChild(dropdownDownloadButton);
 
