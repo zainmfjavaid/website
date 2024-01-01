@@ -137,6 +137,10 @@ function bindGalleryImages() {
 
             input.onkeyup = async function(e) {
                 if (e.key === 'Enter') {
+                    if (!this.value.includes('.')) {
+                        this.value = this.value + '.png';
+                    }
+
                     const data = {
                         oldName: fileName.textContent,
                         newName: this.value
@@ -153,6 +157,13 @@ function bindGalleryImages() {
 
                         if (response.ok) {
                             console.log('File renamed successfully');
+                            const responseData = await response.json();
+                            const newUrl = responseData.newUrl;
+                            downloadBtn.href = newUrl;
+                            downloadBtn.download = this.value;
+                            img.id = 'image-' + this.value;
+                            img.src = newUrl;
+
                         } else {
                             console.error('Error renaming file');
                         }
