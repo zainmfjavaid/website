@@ -49,7 +49,10 @@ function bindGalleryImages() {
             imageWrapper.appendChild(expandedImg);
 
             const fileName = document.createElement('span');
-            fileName.textContent = decodeURIComponent(img.src.split('/').pop());
+            const imageFileName = decodeURIComponent(img.src.split('/').pop());
+            const truncatedFileName = imageFileName.length > 50 ? imageFileName.slice(0, 50) + '...' : imageFileName;
+            fileName.textContent = truncatedFileName;
+            fileName.setAttribute('data-full-name', imageFileName);
             fileName.className = 'file-name';
             fileName.title = 'Double-click to rename';
             expandedContainer.appendChild(fileName);
@@ -94,12 +97,12 @@ function bindGalleryImages() {
 
             renameBtn.onclick = function() {
                 closeDropdownMenu();
-                input.value = fileName.textContent;
+                input.value = fileName.getAttribute('data-full-name');
                 input.style.display = 'inline';
                 fileName.style.display = 'none';
                 dropdownBtn.style.top = '60px';
                 input.focus();
-            }
+            };
 
             deleteBtn.onclick = async function() {
                 closeDropdownMenu();
@@ -147,7 +150,7 @@ function bindGalleryImages() {
             };
 
             fileName.ondblclick = function() {
-                input.value = fileName.textContent;
+                input.value = fileName.getAttribute('data-full-name');
                 input.style.display = 'inline';
                 fileName.style.display = 'none';
                 dropdownBtn.style.top = '60px';
@@ -155,7 +158,9 @@ function bindGalleryImages() {
             };
 
             input.onblur = function() {
-                fileName.textContent = this.value;
+                const originalFullName = fileName.getAttribute('data-full-name');
+                const truncatedFileName = originalFullName.length > 50 ? originalFullName.slice(0, 50) + '...' : originalFullName;
+                fileName.textContent = truncatedFileName;
                 fileName.style.display = 'inline';
                 input.style.display = 'none';
                 dropdownBtn.style.top = '48px';
@@ -163,15 +168,15 @@ function bindGalleryImages() {
 
             input.onkeyup = async function(e) {
                 if (e.key === 'Enter') {
-                    if (!this.value.includes('.')) {
-                        this.value = this.value + '.png';
-                    }
-
+                    const newFullName = this.value;
+                    const oldFullName = fileName.getAttribute('data-full-name');
+                    const newTruncatedName = newFullName.length > 50 ? newFullName.slice(0, 50) + '...' : newFullName;
+            
                     const data = {
-                        oldName: fileName.textContent,
-                        newName: this.value
+                        oldName: oldFullName,
+                        newName: newFullName
                     };
-
+            
                     try {
                         const response = await fetch('/portal/media/rename', {
                             method: 'POST',
@@ -180,26 +185,31 @@ function bindGalleryImages() {
                             },
                             body: JSON.stringify(data)
                         });
-
+            
                         if (response.ok) {
                             console.log('File renamed successfully');
                             const responseData = await response.json();
                             const newUrl = responseData.newUrl;
                             downloadBtn.href = newUrl;
-                            downloadBtn.download = this.value;
-                            img.id = 'image-' + this.value;
+                            downloadBtn.download = newFullName;
+                            img.id = 'image-' + newFullName;
                             img.src = newUrl;
-
+            
+                            fileName.textContent = newTruncatedName;
+                            fileName.setAttribute('data-full-name', newFullName);
                         } else {
                             console.error('Error renaming file');
                         }
                     } catch (error) {
                         console.error('Error:', error);
                     }
-
+            
+                    input.style.display = 'none';
+                    fileName.style.display = 'inline';
+                    dropdownBtn.style.top = '48px';
                     this.blur();
                 }
-            };
+            };            
 
             const downloadBtn = document.createElement('a');
             downloadBtn.textContent = 'Download';
