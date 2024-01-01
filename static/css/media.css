@@ -21,7 +21,10 @@ body.no-scroll {
     align-items: center;
     column-gap: 100px;
     padding: 20px;
-    margin-bottom: 25px;
+    margin-bottom: 35px;
+    border-bottom: #ccc;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
 }
 
 #upload-button {
