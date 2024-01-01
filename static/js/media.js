@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.appendChild(expandedContainer);
 
     document.querySelectorAll('.gallery-image').forEach(img => {
+        img.id = 'image-' + decodeURIComponent(img.src.split('/').pop());
+
         img.addEventListener('click', () => {
             expandedContainer.innerHTML = '';
 
@@ -49,9 +51,68 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteBtn.className = 'dropdown-item';
             dropdownContent.appendChild(deleteBtn);
 
+            const dropdownDownloadButton = document.createElement('button');
+            dropdownDownloadButton.textContent = 'Download';
+            dropdownDownloadButton.className = 'dropdown-item';
+            dropdownContent.appendChild(dropdownDownloadButton);
+
             dropdownBtn.onclick = function() {
                 dropdownContent.classList.toggle('show');
                 this.classList.toggle('active');
+            };
+
+            renameBtn.onclick = function() {
+                closeDropdownMenu();
+                input.value = fileName.textContent;
+                input.style.display = 'inline';
+                fileName.style.display = 'none';
+                dropdownBtn.style.top = '60px';
+                input.focus();
+            }
+
+            deleteBtn.onclick = async function() {
+                closeDropdownMenu();
+
+                const fileNameToDelete = fileName.textContent;
+                const data = { fileName: fileNameToDelete };
+
+                try {
+                    const response = await fetch('/portal/media/delete', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    if (response.ok) {
+                        console.log('File deleted successfully');
+                        removeImageFromGallery(fileNameToDelete);
+                    } else {
+                        console.error('Error deleting file');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+                closeExpandedImage();
+            };
+
+            function removeImageFromGallery(fileName) {
+                const imageElement = document.getElementById('image-' + fileName);
+                if (imageElement) {
+                    imageElement.parentNode.removeChild(imageElement);
+                }
+            }
+
+            dropdownDownloadButton.onclick = function() {
+                closeDropdownMenu();            
+                const tempDownloadLink = document.createElement('a');
+                tempDownloadLink.href = img.src;
+                tempDownloadLink.download = fileName.textContent;
+                tempDownloadLink.style.display = 'none';
+                document.body.appendChild(tempDownloadLink);
+                tempDownloadLink.click();
+                document.body.removeChild(tempDownloadLink);
             };
 
             fileName.ondblclick = function() {
@@ -115,6 +176,19 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.classList.add('no-scroll');
         });
     });
+
+    function closeDropdownMenu() {
+        const dropdownBtn = document.querySelector('.dropdown-button');
+        const dropdownContent = document.querySelector('.dropdown-content');
+
+        if (dropdownBtn && dropdownContent) {
+            dropdownContent.classList.remove('show');
+            if (dropdownBtn.classList.contains('active')) {
+                dropdownBtn.classList.remove('active');
+                dropdownBtn.blur();
+            }
+        }
+    }
 
     function closeExpandedImage() {
         expandedContainer.style.display = 'none';

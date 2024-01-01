@@ -7,6 +7,15 @@ body.no-scroll {
     overflow: hidden;
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
 #media-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, 200px);
@@ -15,8 +24,9 @@ body.no-scroll {
     width: calc(100% - 85px);
     margin-left: calc(85px + 6vw);
     overflow-y: scroll;
-    padding: 5vh 5vw 2.5vh 0vw;
-    height: 95vh;
+    padding: 5vh 5vw 5vh 0vw;
+    height: 90vh;
+    animation: fadeIn 0.5s ease-in-out forwards;
 }
 
 .gallery-image {
