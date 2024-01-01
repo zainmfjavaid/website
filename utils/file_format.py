@@ -13,7 +13,7 @@ def _contains_endings(file_name: str, endings: List) -> bool:
     Returns:
         bool: Whether the file contains an extension from the list of endings
     """
-    return any([file_name.endswith(ending) for ending in endings])
+    return any([file_name.lower().endswith(ending) for ending in endings])
 
 def is_image_file(file_name: str) -> bool:
     """Check if a file has an image ending based on its name
