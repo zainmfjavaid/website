@@ -91,7 +91,7 @@ body.no-scroll {
 
 .file-name {
     position: absolute;
-    top: 30px;
+    top: 25px;
     left: 140px;
     color: #000;
     font-size: 16px;
@@ -106,4 +106,64 @@ body.no-scroll {
     border-radius: 5px;
     padding: 5px;
     width: calc(150px);
+}
+
+.dropdown-button {
+    position: absolute;
+    top: 48px;
+    left: 130px;
+    font-size: 15px;
+    background-color: transparent;
+    color: #736c64;
+    border: none;
+    cursor: pointer;
+    z-index: 11;
+    padding: 7.5px 10px;
+    overflow: hidden;
+}
+
+.dropdown-button.active {
+    background-color: #ebe9e6;
+}
+
+.dropdown-button::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ebe9e6;
+    transition: top 0.1s;
+    z-index: -1;
+}
+
+.dropdown-button:hover::after {
+    top: 0;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 12;
+    top: 80px;
+    left: 130px;
+}
+
+.dropdown-content .dropdown-item {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content .dropdown-item:hover {
+    background-color: #f1f1f1
+}
+
+.show {
+    display: block;
 }

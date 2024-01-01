@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const fileName = document.createElement('span');
             fileName.textContent = decodeURIComponent(img.src.split('/').pop());
             fileName.className = 'file-name';
-            fileName.title = 'Double-click to rename'
+            fileName.title = 'Double-click to rename';
             expandedContainer.appendChild(fileName);
 
             const input = document.createElement('input');
@@ -30,18 +30,43 @@ document.addEventListener('DOMContentLoaded', () => {
             input.style.display = 'none';
             expandedContainer.appendChild(input);
 
+            const dropdownBtn = document.createElement('button');
+            dropdownBtn.textContent = 'File';
+            dropdownBtn.className = 'dropdown-button';
+            expandedContainer.appendChild(dropdownBtn);
+
+            const dropdownContent = document.createElement('div');
+            dropdownContent.className = 'dropdown-content';
+            expandedContainer.appendChild(dropdownContent);
+
+            const renameBtn = document.createElement('button');
+            renameBtn.textContent = 'Rename';
+            renameBtn.className = 'dropdown-item';
+            dropdownContent.appendChild(renameBtn);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.className = 'dropdown-item';
+            dropdownContent.appendChild(deleteBtn);
+
+            dropdownBtn.onclick = function() {
+                dropdownContent.classList.toggle('show');
+                this.classList.toggle('active');
+            };
+
             fileName.ondblclick = function() {
                 input.value = fileName.textContent;
                 input.style.display = 'inline';
                 fileName.style.display = 'none';
+                dropdownBtn.style.top = '60px';
                 input.focus();
             };
 
             input.onblur = function() {
                 fileName.textContent = this.value;
-                downloadBtn.download = this.value;
                 fileName.style.display = 'inline';
                 input.style.display = 'none';
+                dropdownBtn.style.top = '48px';
             };
 
             input.onkeyup = async function(e) {
@@ -91,19 +116,40 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    function closeExpandedImage() {
+        expandedContainer.style.display = 'none';
+        document.body.classList.remove('no-scroll');
+    }
+
+    document.addEventListener('mousedown', function(event) {
+        const dropdownBtn = document.querySelector('.dropdown-button');
+        const dropdownContent = document.querySelector('.dropdown-content');
+    
+        if (dropdownBtn && dropdownContent) {
+            if (!dropdownBtn.contains(event.target) && !dropdownContent.contains(event.target)) {
+                if (dropdownContent.classList.contains('show')) {
+                    dropdownContent.classList.remove('show');
+                    if (dropdownBtn.classList.contains('active')) {
+                        dropdownBtn.classList.remove('active');
+                        dropdownBtn.blur();
+                    }
+                }
+            }
+        }
+    });    
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const activeElement = document.activeElement;
             if (activeElement && activeElement.className === 'file-name-input') {
+                activeElement.blur();
+            } else if (activeElement && activeElement.className == 'dropdown-button active') {
+                document.querySelector('.dropdown-content').classList.toggle('show');
+                activeElement.classList.toggle('active');
                 activeElement.blur();
             } else {
                 closeExpandedImage();
             }
         }
     });
-
-    function closeExpandedImage() {
-        expandedContainer.style.display = 'none';
-        document.body.classList.remove('no-scroll');
-    }
 });

@@ -58,7 +58,8 @@ def portal_media_rename(action):
         old_path = os.path.join(os.environ['MEDIA_DIRECTORY_PATH'], old_name)
         new_path = os.path.join(os.environ['MEDIA_DIRECTORY_PATH'], new_name)
         
-        os.rename(old_path, new_path)
+        if old_path != new_path:
+            os.rename(old_path, new_path)
         
     elif action == 'delete':
         file_name = request.json.get('fileName')
