@@ -1,2 +1,2 @@
-python-dotenv
-mysql-connector-python
+python-dotenv==1.0.0
+mysql-connector-python==8.2.0
