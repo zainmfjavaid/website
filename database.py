@@ -1,7 +1,6 @@
 import os
 import hashlib
-import string
-import random as rd
+from typing import List
 from dotenv import load_dotenv
 import mysql.connector
 
@@ -109,3 +108,22 @@ class Database:
         self.conn.commit()
         self._close_connection()
         return article_id
+    
+    def get_articles(self, user_id: int=None) -> List:
+        """Get a list of articles for a user. If no user_id is specified, then gets all articles.
+
+        Args:
+            user_id (int, optional): User ID to search for. Defaults to None.
+
+        Returns:
+            List: Article list
+        """
+        self._setup_connection()
+        
+        if user_id:
+            self.cursor.execute('SELECT * FROM articles WHERE user_id=%s', (user_id,))
+        else:
+            self.cursor.execute('SELECT * FROM articles')
+        rows = self.cursor.fetchall()
+        self._close_connection()
+        return rows
