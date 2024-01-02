@@ -1,5 +1,7 @@
 import os
 import hashlib
+import string
+import random as rd
 from dotenv import load_dotenv
 import mysql.connector
 
@@ -24,6 +26,17 @@ class Database:
             )
         ''')
         
+        self.cursor.execute('''
+            CREATE TABLE IF NOT EXISTS articles (
+                article_id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT,
+                title VARCHAR(255) NOT NULL,
+                date_published DATETIME NOT NULL,
+                content TEXT NOT NULL,
+                FOREIGN KEY (user_id) REFERENCES creators(id)
+            )
+        ''')
+        
         self.conn.commit()
     
     def _close_connection(self) -> None:
@@ -31,25 +44,34 @@ class Database:
         self.cursor.close()
         self.conn.close()
         
-    def add_user(self, username: str, password: str) -> None:
+    def add_user(self, username: str, password: str) -> int:
         """Add user to the creator database
 
         Args:
             username (str): New user's username
             password (str): New user's password (plaintext)
+            
+        Returns:
+            int: The new (or existing) user's ID
         """
         self._setup_connection()
-        self.cursor.execute('SELECT username FROM creators WHERE username=%s', (username,))
-        if not self.cursor.fetchone():
+        self.cursor.execute('SELECT id FROM creators WHERE username=%s', (username,))
+        row = self.cursor.fetchone()
+        
+        if not row:
             password_hash = hashlib.sha256(password.encode()).hexdigest()
             insert_str = 'INSERT INTO creators (username, password) VALUES (%s, %s)'
             row = (username, password_hash)
             self.cursor.execute(insert_str, row)
-            self.conn.commit()
-        
+            user_id = self.cursor.lastrowid
+            self.conn.commit()            
+        else:
+            user_id = row[0]
+                
         self._close_connection()
+        return user_id
         
-    def validate_user(self, username: str, password: str) -> bool:
+    def validate_user(self, username: str, password: str) -> int:
         """Validate whether entered user credentials match database entry
 
         Args:
@@ -57,16 +79,33 @@ class Database:
             password (str): Entered password
 
         Returns:
-            bool: Whether matching entry exists in the creator table
+            int: User ID of user if valid login. If not, returns None.
         """
         self._setup_connection()
-        self.cursor.execute('SELECT password FROM creators WHERE username=%s', (username,))
+        self.cursor.execute('SELECT * FROM creators WHERE username=%s', (username,))
         row = self.cursor.fetchone()
+        self._close_connection()
         if row:
             password_hash = hashlib.sha256(password.encode()).hexdigest()
-            if password_hash == row[0]:
-                self._close_connection()
-                return True
+            if password_hash == row[2]:
+                return row[0]
+    
+    def add_article(self, user_id: int, title: str, content: str) -> int:
+        """Create an entry in the artices table
+
+        Args:
+            user_id (int): ID for the user publishing the article
+            title (str): Title of the article
+            content (str): Content of the article
             
+        Returns:
+
+        """
+        self._setup_connection()
+        insert_str = 'INSERT INTO articles (user_id, title, date_published, content) VALUES (%s, %s, CURRENT_TIMESTAMP, %s)'
+        row = (user_id, title, content)
+        self.cursor.execute(insert_str, row)
+        article_id = self.cursor.lastrowid
+        self.conn.commit()
         self._close_connection()
-        return False
+        return article_id

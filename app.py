@@ -1,7 +1,7 @@
 import os
-from auth import Database
+from database import Database
 from dotenv import load_dotenv
-from utils.file_format import *
+from utils.file import *
 from werkzeug.utils import secure_filename
 from flask import Flask, render_template, redirect, request, session
 
@@ -19,10 +19,10 @@ def index():
 def portal_login():
     if request.method == 'POST':
         username, password = request.form['username'], request.form['password']        
-        is_valid_login = Database().validate_user(username, password)
-        if is_valid_login:
+        user_id = Database().validate_user(username, password)
+        if user_id is not None:
             session['is_logged_in'] = True
-            session['username'] = username
+            session['user_id'] = user_id
             return redirect('/portal')
         else:
             return render_template('login.html', bad_attempt=True)
@@ -41,10 +41,9 @@ def portal_media():
     if not session.get('is_logged_in'):
         return redirect('/portal/login')
     
-    full_media_paths = []
-    for media_file in os.listdir(os.environ['MEDIA_DIRECTORY_PATH']):
-        full_media_paths.append(os.path.join('/', os.environ['MEDIA_DIRECTORY_PATH'], media_file))
-    
+    time_sorted_file_names = get_file_paths_by_time(os.path.abspath(os.environ['MEDIA_DIRECTORY_PATH']))
+    full_media_paths = [os.path.join('/', os.environ['MEDIA_DIRECTORY_PATH'], file_name) for file_name in time_sorted_file_names]
+
     return render_template('portal_media.html', media_files=full_media_paths)
 
 @app.route('/portal/media/<action>', methods=['POST'])

@@ -1,4 +1,6 @@
+import os
 from typing import List
+from pathlib import Path
 
 
 IMAGE_ENDINGS = ['.png', '.jpg', '.jpeg', '.tiff', '.tif', '.webp', '.svg']
@@ -25,3 +27,14 @@ def is_image_file(file_name: str) -> bool:
         bool: Whether it has an image extension
     """
     return _contains_endings(file_name, IMAGE_ENDINGS)
+
+def get_file_paths_by_time(directory: str) -> List:
+    """Gets paths in a directory then sorts them by time modified
+
+    Args:
+        directory (str): Directory to list from
+
+    Returns:
+        List: Sorted list of paths
+    """
+    return [str(os.path.basename(file_path)) for file_path in sorted(Path(directory).iterdir(), key=os.path.getmtime, reverse=True)]

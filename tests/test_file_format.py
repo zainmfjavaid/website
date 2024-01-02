@@ -6,7 +6,7 @@ import pytest
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 # Modules to test
-from utils.file_format import is_image_file
+from utils.file import is_image_file
 
 
 @pytest.fixture
