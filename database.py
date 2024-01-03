@@ -33,6 +33,7 @@ class Database:
                 content TEXT NOT NULL,
                 date_published DATETIME DEFAULT NULL,
                 is_published BOOLEAN NOT NULL DEFAULT FALSE,
+                is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
                 FOREIGN KEY (user_id) REFERENCES creators(id)
             )
         ''')
@@ -60,9 +61,9 @@ class Database:
         
         if not row:
             password_hash = hashlib.sha256(password.encode()).hexdigest()
-            insert_str = 'INSERT INTO creators (username, password) VALUES (%s, %s)'
+            insert_query = 'INSERT INTO creators (username, password) VALUES (%s, %s)'
             row = (username, password_hash)
-            self.cursor.execute(insert_str, row)
+            self.cursor.execute(insert_query, row)
             user_id = self.cursor.lastrowid
             self.conn.commit()            
         else:
@@ -102,13 +103,39 @@ class Database:
 
         """
         self._setup_connection()
-        insert_str = 'INSERT INTO articles (user_id, title, content) VALUES (%s, %s, %s)'
+        insert_query = 'INSERT INTO articles (user_id, title, content) VALUES (%s, %s, %s)'
         row = (user_id, title, content)
-        self.cursor.execute(insert_str, row)
+        self.cursor.execute(insert_query, row)
         article_id = self.cursor.lastrowid
         self.conn.commit()
         self._close_connection()
         return article_id
+    
+    def set_article_delete(self, article_id: int, delete_state: bool) -> None:
+        """Modify an article's is_delted attribute to True or False
+
+        Args:
+            article_id (int): Article ID to modify
+            delete_state (bool): Whether to set the article to deleted or not
+        """
+        self._setup_connection()
+        update_query = 'UPDATE articles SET is_deleted=%s WHERE id=%s'
+        row = (delete_state, article_id)
+        self.cursor.execute(update_query, row)
+        self.conn.commit()
+        self._close_connection()
+        
+    def remove_article(self, article_id: int) -> None:
+        """Remove an article from the table completely (used for delete permanently operation)
+
+        Args:
+            article_id (int): Article ID to remove
+        """
+        self._setup_connection()
+        delete_query = 'DELETE FROM articles WHERE id=%s'
+        self.cursor.execute(delete_query, (article_id,))
+        self.conn.commit()
+        self._close_connection()
     
     def get_articles(self, user_id: int, is_published: bool=None) -> List:
         """Get a list of articles for a user and publication status
