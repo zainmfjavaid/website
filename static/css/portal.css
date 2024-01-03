@@ -1,47 +1,3 @@
-body {
-    display: flex;
-    flex-direction: row;
-    margin: 0px;
-    padding: 0px;
-    font-family: 'Inter', sans-serif;
-}
-
-.sidebar {
-    display: flex;
-    flex-direction: column;
-    row-gap: 100px;
-    align-items: center;
-    height: 90vh;
-    width: 85px;
-    padding-top: 10vh;
-    background-color: lightblue;
-    overflow: hidden;
-    position: fixed; 
-}
-
-#profile-icon-container {
-    position: absolute;
-    bottom: 10vh;
-}
-
-.unset-a {
-    all: unset;
-}
-
-.unset-a:hover {
-    cursor: pointer;
-}
-
-.opacity-hover:hover {
-    cursor: pointer;
-    transition: all 0.35s ease-in-out;
-    opacity: 0.5;
-}
-
-.icon-selected {
-    color: blue;
-}
-
 #article-container {
     width: calc(100vw - 85px);
     height: calc(100vh - 5vh);
@@ -108,4 +64,28 @@ body {
     font-size: 14px;
     font-weight: 500;
     color: #2c3338;
+}
+
+#article-grid {
+    margin-top: 7vh;
+}
+
+.article-grid-item {
+    height: 300px;
+    width: 250px;
+    background-color: white;
+    transition: all .5s ease-in-out;
+}
+
+.article-grid-item:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+}
+
+.add-article {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 105px;
+    font-weight: 600;
 }

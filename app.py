@@ -36,6 +36,21 @@ def portal():
     else:
         return redirect('/portal/login')
     
+@app.route('/portal/post')
+def portal_article_create():
+    if not session.get('is_logged_in'):
+        return redirect('/portal/login')
+    
+    article_id = Database().add_article(user_id=session['user_id'], title='', content='')
+    return redirect(f'/portal/post/{article_id}')
+
+@app.route('/portal/post/<article_id>')
+def portal_edit_post(article_id):
+    if not session.get('is_logged_in'):
+        return redirect('/portal/login')
+    
+    return article_id
+    
 @app.route('/portal/media')
 def portal_media():
     if not session.get('is_logged_in'):
