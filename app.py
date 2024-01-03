@@ -49,7 +49,7 @@ def portal_edit_post(article_id):
     if not session.get('is_logged_in'):
         return redirect('/portal/login')
     
-    return article_id
+    return render_template('portal_editor.html')
     
 @app.route('/portal/media')
 def portal_media():
