@@ -13,5 +13,12 @@
         <div id="action-bar">
             <div class="close-button" onclick="window.location.href = '/portal'">X</div>
         </div>
+        <div id="edit-area-container">
+            <div id="edit-area">
+                <h1 class="content-block title-block pre-populate" contenteditable="true" data-placeholder="Add title"></h1>
+                <p class="content-block paragraph-block pre-populate" contenteditable="true" data-placeholder="Type / to choose a block"></p>
+            </div>
+        </div>
+        <script src="{{ url_for('static', filename='js/editor.js') }}"></script>
     </body>
 </html>
