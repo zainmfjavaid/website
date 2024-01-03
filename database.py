@@ -30,8 +30,9 @@ class Database:
                 article_id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT,
                 title VARCHAR(255) NOT NULL,
-                date_published DATETIME NOT NULL,
                 content TEXT NOT NULL,
+                date_published DATETIME DEFAULT NULL,
+                is_published BOOLEAN NOT NULL DEFAULT FALSE,
                 FOREIGN KEY (user_id) REFERENCES creators(id)
             )
         ''')
@@ -101,7 +102,7 @@ class Database:
 
         """
         self._setup_connection()
-        insert_str = 'INSERT INTO articles (user_id, title, date_published, content) VALUES (%s, %s, CURRENT_TIMESTAMP, %s)'
+        insert_str = 'INSERT INTO articles (user_id, title, content) VALUES (%s, %s, %s)'
         row = (user_id, title, content)
         self.cursor.execute(insert_str, row)
         article_id = self.cursor.lastrowid
@@ -109,21 +110,22 @@ class Database:
         self._close_connection()
         return article_id
     
-    def get_articles(self, user_id: int=None) -> List:
-        """Get a list of articles for a user. If no user_id is specified, then gets all articles.
+    def get_articles(self, user_id: int, is_published: bool=None) -> List:
+        """Get a list of articles for a user and publication status
 
         Args:
-            user_id (int, optional): User ID to search for. Defaults to None.
+            user_id (int, optional): User ID to search for
+            is_published (bool, optional): Filter for if an article is published or not. Defaults to None.
 
         Returns:
-            List: Article list
+            List: Matching article list
         """
         self._setup_connection()
         
-        if user_id:
-            self.cursor.execute('SELECT * FROM articles WHERE user_id=%s', (user_id,))
+        if is_published is not None:
+            self.cursor.execute('SELECT * FROM articles WHERE user_id=%s AND is_published=%s', (user_id, is_published))
         else:
-            self.cursor.execute('SELECT * FROM articles')
+            self.cursor.execute('SELECT * FROM articles WHERE user_id=%s', (user_id,))
         rows = self.cursor.fetchall()
         self._close_connection()
         return rows

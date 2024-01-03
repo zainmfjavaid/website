@@ -3,6 +3,7 @@ body {
     flex-direction: row;
     margin: 0px;
     padding: 0px;
+    font-family: 'Inter', sans-serif;
 }
 
 .sidebar {
@@ -39,4 +40,18 @@ body {
 
 .selected {
     color: blue;
+}
+
+#article-container {
+    width: calc(100vw - 85px);
+    height: calc(100vh - 5vh);
+    margin-left: calc(6vw + 85px);
+    margin-top: 5vh;
+    padding-right: 6vw;
+}
+
+#article-container-label {
+    font-weight: 600;
+    color: rgb(66, 66, 66);
+    font-size: 30px;
 }
