@@ -33,7 +33,7 @@ body {
 .content-block {
     border: none;
     outline: none;
-    padding: 14px 0;
+    padding: 12px 0;
 }
 
 .title-block {
@@ -53,4 +53,10 @@ body {
     color: grey;
     pointer-events: none;
     display: block;
+}
+
+#text-toolbar {
+    background-color: black;
+    width: 100px;
+    height: 20px;
 }
