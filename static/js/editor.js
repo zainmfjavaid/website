@@ -78,19 +78,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 var range = sel.getRangeAt(0);
                 var startContainer = range.startContainer;
                 var lineElement = startContainer.nodeType === Node.TEXT_NODE ? startContainer.parentNode : startContainer;
-
+    
+                var rangeRect = range.getBoundingClientRect();
+                var toolbarLeft = rangeRect.left + window.scrollX;
+    
                 if (lineElement === lastSelectedLineElement && lastToolbarTop !== null) {
                     toolbar.style.top = `${lastToolbarTop}px`;
                 } else {
-                    var rect = lineElement.getBoundingClientRect();
-                    var currentToolbarTop = rect.top + window.scrollY - toolbar.offsetHeight - 20;
+                    var lineRect = lineElement.getBoundingClientRect();
+                    var currentToolbarTop = lineRect.top + window.scrollY - toolbar.offsetHeight - 15;
                     lastToolbarTop = currentToolbarTop;
                     lastSelectedLineElement = lineElement;
-
                     toolbar.style.top = `${currentToolbarTop}px`;
                 }
-
-                var toolbarLeft = rect.left + window.scrollX;
+    
                 toolbar.style.position = 'absolute';
                 toolbar.style.left = `${toolbarLeft}px`;
                 toolbar.style.display = 'block';
@@ -99,5 +100,5 @@ document.addEventListener('DOMContentLoaded', function() {
                 lastSelectedLineElement = null;
             }
         }, 10);
-    }
+    }    
 });
