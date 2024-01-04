@@ -111,6 +111,34 @@ class Database:
         self._close_connection()
         return article_id
     
+    def save_article(self, article_id: int, title: str, content: str) -> None:
+        """Update the content and title of the article entry
+
+        Args:
+            article_id (int): Article ID to modify
+            title (str): New title of the article
+            content (str): New content of the article
+        """
+        self._setup_connection()
+        update_query = 'UPDATE articles SET title=%s, content=%s WHERE article_id=%s'
+        row = (title, content, article_id)
+        self.cursor.execute(update_query, row)
+        self.conn.commit()
+        self._close_connection()
+        
+    def publish_article(self, article_id: int) -> None:
+        """Set publish fields to appropriate values
+
+        Args:
+            article_id (int): Article ID to publish
+        """
+        self._setup_connection()
+        update_query = 'UPDATE articles SET date_published=CURRENT_TIMESTAMP, is_published=true WHERE article_id=%s'
+        row = (article_id,)
+        self.cursor.execute(update_query, row)
+        self.conn.commit()
+        self._close_connection()
+    
     def set_article_delete(self, article_id: int, delete_state: bool) -> None:
         """Modify an article's is_delted attribute to True or False
 
@@ -119,7 +147,7 @@ class Database:
             delete_state (bool): Whether to set the article to deleted or not
         """
         self._setup_connection()
-        update_query = 'UPDATE articles SET is_deleted=%s WHERE id=%s'
+        update_query = 'UPDATE articles SET is_deleted=%s WHERE article_id=%s'
         row = (delete_state, article_id)
         self.cursor.execute(update_query, row)
         self.conn.commit()
@@ -132,7 +160,7 @@ class Database:
             article_id (int): Article ID to remove
         """
         self._setup_connection()
-        delete_query = 'DELETE FROM articles WHERE id=%s'
+        delete_query = 'DELETE FROM articles WHERE article_id=%s'
         self.cursor.execute(delete_query, (article_id,))
         self.conn.commit()
         self._close_connection()
