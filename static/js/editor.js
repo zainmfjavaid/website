@@ -131,7 +131,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 selection.removeAllRanges();
                 selection.addRange(currentRange);
         
-                // Check if the selection is within an anchor tag
                 var anchorNode = selection.anchorNode;
                 while (anchorNode && anchorNode.nodeName !== 'A' && anchorNode.nodeName !== 'BODY') {
                     anchorNode = anchorNode.parentNode;
@@ -139,36 +138,42 @@ document.addEventListener('DOMContentLoaded', function() {
                 var isLink = anchorNode.nodeName === 'A';
         
                 if (isLink) {
-                    // Remove the link
                     var text = anchorNode.textContent;
                     var textNode = document.createTextNode(text);
                     anchorNode.parentNode.replaceChild(textNode, anchorNode);
         
-                    // Update currentRange to the new text node
                     currentRange.setStartBefore(textNode);
                     currentRange.setEndAfter(textNode);
         
                     linkButton.style.color = 'inherit';
                 } else {
-                    // Add a new link
                     var url = prompt("Enter the URL:", "https://");
                     if (url) {
                         var anchor = document.createElement('a');
                         anchor.href = url;
                         anchor.textContent = currentRange.toString();
                         anchor.className = 'embedded-text-link';
+                        anchor.onclick = function() {
+                            window.open(anchor.href, '_blank');
+                        }
+
+                        anchor.onmouseover = function() {
+                            anchor.style.color = 'red';
+                        }
+
+                        anchor.onmouseleave = function() {
+                            anchor.style = 'inherit';
+                        }
         
                         currentRange.deleteContents();
                         currentRange.insertNode(anchor);
         
-                        // Update currentRange to the new anchor element
                         currentRange.selectNode(anchor);
         
                         linkButton.style.color = 'rgb(35, 131, 226)';
                     }
                 }
                 
-                // Reapply the selection
                 selection.removeAllRanges();
                 selection.addRange(currentRange);
             }
