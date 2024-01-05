@@ -84,3 +84,11 @@ body {
     width: 16px;
     height: 16px;
 }
+
+.embedded-text-link {
+    color: green;
+}
+
+.embedded-text-link:hover {
+    cursor: pointer;
+}

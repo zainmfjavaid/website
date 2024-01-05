@@ -5,6 +5,7 @@ var underlineButton;
 var strikethroughButton;
 
 document.addEventListener('DOMContentLoaded', function() {
+    // Keyboard shortcut management
     var editArea = document.querySelector('#edit-area');
     var contentBlocks = document.querySelectorAll('.content-block');
     var toolbar = createToolbar();
@@ -66,6 +67,54 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Toolbar mangement
+    function checkIfSelectionHasStyle(selection, styleProperty, value) {
+        if (!selection.rangeCount) return false;
+    
+        var range = selection.getRangeAt(0);
+        var container = range.commonAncestorContainer;
+    
+        if (container.nodeType === 3) {
+            container = container.parentNode;
+        }
+    
+        if (styleProperty === 'link') {
+            while (container && container != document.body) {
+                if (container.tagName === 'A') {
+                    return true;
+                }
+                container = container.parentNode;
+            }
+            return false;
+        }
+    
+        var styleValue = window.getComputedStyle(container)[styleProperty];
+        if (styleProperty === 'fontWeight') {
+            return styleValue === 'bold' || parseInt(styleValue) >= 600;
+        } else if (styleProperty === 'textDecoration') {
+            return styleValue.includes(value);
+        }
+        return styleValue === value;
+    }    
+
+    function applyTextStyle(command, styleProperty, value, button) {
+        var selection = window.getSelection();
+    
+        if (currentRange) {
+            selection.removeAllRanges();
+            selection.addRange(currentRange);
+    
+            document.execCommand(command, false, null);
+    
+            if (selection.rangeCount > 0) {
+                currentRange = selection.getRangeAt(0);
+            }
+    
+            var hasStyle = checkIfSelectionHasStyle(selection, styleProperty, value);
+            button.style.color = hasStyle ? 'rgb(35, 131, 226)' : 'inherit';
+        }
+    }
+
     function createToolbar() {
         var toolbar = document.createElement('div');
         toolbar.id = 'text-toolbar';
@@ -76,92 +125,81 @@ document.addEventListener('DOMContentLoaded', function() {
         linkButton.className = 'toolbar-button';
         linkButton.innerHTML = '<svg id="svg-arrow"><path d="M13.1475 10.5869V3.72363C13.1475 3.25195 12.833 2.93066 12.3477 2.93066H5.48438C5.02637 2.93066 4.70508 3.27246 4.70508 3.67578C4.70508 4.07227 5.05371 4.40039 5.46387 4.40039H7.89746L10.8438 4.30469L9.59961 5.39844L3.08496 11.9199C2.92773 12.0771 2.8457 12.2686 2.8457 12.46C2.8457 12.8564 3.20801 13.2256 3.61816 13.2256C3.80957 13.2256 3.99414 13.1504 4.15137 12.9932L10.6729 6.47168L11.7803 5.22754L11.6641 8.05762V10.6074C11.6641 11.0176 11.9922 11.373 12.4023 11.373C12.8057 11.373 13.1475 11.0312 13.1475 10.5869Z"></path></svg>'
         linkButton.innerHTML += '<span style="border-bottom: 1px solid rgba(55, 53, 47, 0.25);">Link</span>';
+        linkButton.onclick = function() {
+            var selection = window.getSelection();
+            if (currentRange) {
+                selection.removeAllRanges();
+                selection.addRange(currentRange);
+        
+                // Check if the selection is within an anchor tag
+                var anchorNode = selection.anchorNode;
+                while (anchorNode && anchorNode.nodeName !== 'A' && anchorNode.nodeName !== 'BODY') {
+                    anchorNode = anchorNode.parentNode;
+                }
+                var isLink = anchorNode.nodeName === 'A';
+        
+                if (isLink) {
+                    // Remove the link
+                    var text = anchorNode.textContent;
+                    var textNode = document.createTextNode(text);
+                    anchorNode.parentNode.replaceChild(textNode, anchorNode);
+        
+                    // Update currentRange to the new text node
+                    currentRange.setStartBefore(textNode);
+                    currentRange.setEndAfter(textNode);
+        
+                    linkButton.style.color = 'inherit';
+                } else {
+                    // Add a new link
+                    var url = prompt("Enter the URL:", "https://");
+                    if (url) {
+                        var anchor = document.createElement('a');
+                        anchor.href = url;
+                        anchor.textContent = currentRange.toString();
+                        anchor.className = 'embedded-text-link';
+        
+                        currentRange.deleteContents();
+                        currentRange.insertNode(anchor);
+        
+                        // Update currentRange to the new anchor element
+                        currentRange.selectNode(anchor);
+        
+                        linkButton.style.color = 'rgb(35, 131, 226)';
+                    }
+                }
+                
+                // Reapply the selection
+                selection.removeAllRanges();
+                selection.addRange(currentRange);
+            }
+        };                   
 
         boldButton = document.createElement('div');
         boldButton.className = 'toolbar-button';
         boldButton.innerHTML = '<span style="font-weight: 600;">B</span>'
         boldButton.onclick = function() {
-            var selection = window.getSelection();
-
-            if (currentRange) {
-                selection.removeAllRanges();
-                selection.addRange(currentRange);
-        
-                document.execCommand('styleWithCSS', false, true);
-                document.execCommand('bold', false, null);
-        
-                if (selection.rangeCount > 0) {
-                    currentRange = selection.getRangeAt(0);
-                }
-        
-                var isBold = checkIfSelectionHasStyle(selection, 'fontWeight', 'bold');
-                boldButton.style.color = isBold ? 'rgb(35, 131, 226)' : 'inherit';
-            }
+            applyTextStyle('bold', 'fontWeight', 'bold', boldButton);
         };
 
         italicButton = document.createElement('div')
         italicButton.className = 'toolbar-button';
         italicButton.innerHTML = '<span style="font-style: italic;">i</span>'
         italicButton.onclick = function() {
-            var selection = window.getSelection();
-
-            if (currentRange) {
-                selection.removeAllRanges();
-                selection.addRange(currentRange);
-        
-                document.execCommand('styleWithCSS', false, true);
-                document.execCommand('italic', false, null);
-        
-                if (selection.rangeCount > 0) {
-                    currentRange = selection.getRangeAt(0);
-                }
-        
-                var isItalic = checkIfSelectionHasStyle(selection, 'fontStyle', 'italic');
-                italicButton.style.color = isItalic ? 'rgb(35, 131, 226)' : 'inherit';
-            }
-        }
+            applyTextStyle('italic', 'fontStyle', 'italic', italicButton);
+        };
 
         underlineButton = document.createElement('div')
         underlineButton.className = 'toolbar-button';
         underlineButton.innerHTML = '<span style="text-decoration: underline;">U</span>'
         underlineButton.onclick = function() {
-            var selection = window.getSelection();
-
-            if (currentRange) {
-                selection.removeAllRanges();
-                selection.addRange(currentRange);
-        
-                document.execCommand('styleWithCSS', false, true);
-                document.execCommand('underline', false, null);
-        
-                if (selection.rangeCount > 0) {
-                    currentRange = selection.getRangeAt(0);
-                }
-        
-                var isUnderlined = checkIfSelectionHasStyle(selection, 'textDecoration', 'underline');
-                underlineButton.style.color = isUnderlined ? 'rgb(35, 131, 226)' : 'inherit';
-            }
-        }
+            applyTextStyle('underline', 'textDecoration', 'underline', underlineButton);
+        };
 
         strikethroughButton = document.createElement('div');
         strikethroughButton.className = 'toolbar-button';
         strikethroughButton.innerHTML = '<span style="text-decoration: line-through;">S</span>'
         strikethroughButton.onclick = function() {
-            var selection = window.getSelection();
-        
-            if (currentRange) {
-                selection.removeAllRanges();
-                selection.addRange(currentRange);
-        
-                document.execCommand('strikethrough', false, null);
-        
-                if (selection.rangeCount > 0) {
-                    currentRange = selection.getRangeAt(0);
-                }
-        
-                var isStrikethrough = checkIfSelectionHasStyle(selection, 'textDecoration', 'line-through');
-                strikethroughButton.style.color = isStrikethrough ? 'rgb(35, 131, 226)' : 'inherit';
-            }
+            applyTextStyle('strikethrough', 'textDecoration', 'line-through', strikethroughButton);
         };
 
         toolbar.append(linkButton);
@@ -184,13 +222,16 @@ document.addEventListener('DOMContentLoaded', function() {
             if (!sel.isCollapsed && sel.rangeCount > 0) {
                 currentRange = sel.getRangeAt(0);
 
+                var isLink = checkIfSelectionHasStyle(window.getSelection(), 'link');
+                linkButton.style.color = isLink ? 'rgb(35, 131, 226)' : 'inherit';
+
                 var isBold = checkIfSelectionHasStyle(sel, 'fontWeight', 'bold');
                 boldButton.style.color = isBold ? 'rgb(35, 131, 226)' : 'inherit';
 
                 var isItalic = checkIfSelectionHasStyle(sel, 'fontStyle', 'italic');
                 italicButton.style.color = isItalic ? 'rgb(35, 131, 226)' : 'inherit';
 
-                var isUnderline = checkIfSelectionHasStyle(sel, 'textDecoration', 'underline');
+                var isUnderline = checkIfSelectionHasStyle(sel, 'textDecoration', 'underline') && !isLink;
                 underlineButton.style.color = isUnderline ? 'rgb(35, 131, 226)' : 'inherit';
 
                 var isStrikethrough = checkIfSelectionHasStyle(sel, 'textDecoration', 'line-through');
@@ -222,23 +263,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }, 10);
     }
-
-    function checkIfSelectionHasStyle(selection, styleProperty, value) {
-        if (!selection.rangeCount) return false;
-    
-        var range = selection.getRangeAt(0);
-        var container = range.commonAncestorContainer;
-    
-        if (container.nodeType === 3) {
-            container = container.parentNode;
-        }
-    
-        var styleValue = window.getComputedStyle(container)[styleProperty];
-        if (styleProperty === 'fontWeight') {
-            return styleValue === 'bold' || parseInt(styleValue) >= 600;
-        } else if (styleProperty === 'textDecoration') {
-            return styleValue.includes(value);
-        }
-        return styleValue === value;
-    }    
 });
