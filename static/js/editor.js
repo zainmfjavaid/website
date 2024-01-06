@@ -26,43 +26,83 @@ document.addEventListener('DOMContentLoaded', function() {
                 moveFocus(contentBlock.previousElementSibling);
             } else if (e.key === 'ArrowDown') {
                 moveFocus(contentBlock.nextElementSibling);
+            } else if (e.key == '/') {
+                if (contentBlock.textContent.trim() === '') {
+                    showActionModal(contentBlock);
+                }
             }
         });
     }
 
+    function showActionModal(contentBlock) {
+        var modal = document.createElement('div');
+        modal.className = 'action-modal';
+        document.body.appendChild(modal);
+    
+        var rect = contentBlock.getBoundingClientRect();
+        modal.style.position = 'absolute';
+        modal.style.top = `${rect.top - modal.offsetHeight}px`;
+        modal.style.left = `${rect.left}px`;
+    
+        modal.style.display = 'block';
+
+        let ignoreFirstKeydown = true;
+
+        function closeModal() {
+            document.removeEventListener('keydown', onKeydown);
+            document.removeEventListener('click', onClickOutsideModal);
+            modal.remove();
+        }
+    
+        function onKeydown(e) {
+            if (ignoreFirstKeydown) {
+                ignoreFirstKeydown = false;
+            } else if (e.key === ' ' || e.key === 'Backspace' || e.key === 'Delete' || e.key === 'Enter') {
+                closeModal();
+            }
+        }
+    
+        function onClickOutsideModal(e) {
+            if (!modal.contains(e.target)) {
+                closeModal();
+            }
+        }
+    
+        document.addEventListener('keydown', onKeydown);
+        document.addEventListener('click', onClickOutsideModal);
+    }
+
     function handleEnterKey(e, contentBlock) {
         e.preventDefault();
-        const nextContentBlock = contentBlock.nextElementSibling;
-        if (nextContentBlock !== null && nextContentBlock.classList.contains('content-block')) {
-            nextContentBlock.focus();
-        } else {
-            var newBlock = document.createElement('p');
-            newBlock.className = 'content-block paragraph-block';
-            newBlock.contentEditable = true;
-            newBlock.setAttribute('data-placeholder', 'Type / to choose a block');
-            editArea.appendChild(newBlock);
-            addBlockEventListener(newBlock);
-            newBlock.focus();
-        }
+        var newBlock = document.createElement('p');
+        newBlock.className = 'content-block paragraph-block';
+        newBlock.contentEditable = true;
+        newBlock.setAttribute('data-placeholder', 'Type / to choose a block');
+        editArea.appendChild(newBlock);
+        addBlockEventListener(newBlock);
+        newBlock.focus();
     }
 
     function handleDeleteKey(contentBlock) {
-        if (!contentBlock.classList.contains('pre-populate') && contentBlock.textContent === '') {
+        if (!contentBlock.classList.contains('pre-populate') && contentBlock.textContent.trim() === '') {
+            var previousBlock = contentBlock.previousElementSibling;
             contentBlock.remove();
-            moveFocus(contentBlock.previousElementSibling);
+            if (previousBlock && previousBlock.classList.contains('content-block')) {
+                moveFocus(previousBlock);
+            }
         }
     }
-
+    
     function moveFocus(targetBlock) {
         if (targetBlock && targetBlock.isContentEditable) {
             setTimeout(function() {
+                targetBlock.focus();
                 let range = document.createRange();
-                let sel = window.getSelection();
                 range.selectNodeContents(targetBlock);
                 range.collapse(false);
+                let sel = window.getSelection();
                 sel.removeAllRanges();
                 sel.addRange(range);
-                targetBlock.focus();
             }, 0);
         }
     }
