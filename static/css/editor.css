@@ -1,5 +1,5 @@
 body {
-    font-family: 'Inter', sans-serif;
+    font-family: manuka,Arial,"sans-serif";
 }
 
 #action-bar {
@@ -41,6 +41,8 @@ body {
     font-size: 35px;
     font-weight: 400;
     padding: 20px 0;
+    font-size: 65px;
+    font-weight: 900;
 }
 
 .paragraph-block {
