@@ -41,7 +41,7 @@ def portal_article_create():
     if not session.get('is_logged_in'):
         return redirect('/portal/login')
     
-    article_id = Database().add_article(user_id=session['user_id'], title='', content='')
+    article_id = Database().add_article(user_id=session['user_id'], title='', content_path='')
     return redirect(f'/portal/post/{article_id}')
 
 @app.route('/portal/post/<article_id>')

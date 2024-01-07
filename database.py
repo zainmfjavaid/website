@@ -30,7 +30,7 @@ class Database:
                 article_id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT,
                 title VARCHAR(255) NOT NULL,
-                content TEXT NOT NULL,
+                content_path TEXT NOT NULL,
                 date_published DATETIME DEFAULT NULL,
                 is_published BOOLEAN NOT NULL DEFAULT FALSE,
                 is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
@@ -91,37 +91,51 @@ class Database:
             if password_hash == row[2]:
                 return row[0]
     
-    def add_article(self, user_id: int, title: str, content: str) -> int:
+    def add_article(self, user_id: int, title: str, content_path: str) -> int:
         """Create an entry in the artices table
 
         Args:
             user_id (int): ID for the user publishing the article
             title (str): Title of the article
-            content (str): Content of the article
+            content_path (str): Path to the HTML path of the article
             
         Returns:
 
         """
         self._setup_connection()
-        insert_query = 'INSERT INTO articles (user_id, title, content) VALUES (%s, %s, %s)'
-        row = (user_id, title, content)
+        insert_query = 'INSERT INTO articles (user_id, title, content_path) VALUES (%s, %s, %s)'
+        row = (user_id, title, content_path)
         self.cursor.execute(insert_query, row)
         article_id = self.cursor.lastrowid
         self.conn.commit()
         self._close_connection()
         return article_id
     
-    def save_article(self, article_id: int, title: str, content: str) -> None:
-        """Update the content and title of the article entry
+    def update_article(self, article_id: int, title: str=None, content_path: str=None) -> None:
+        """Update the title or content path of the article entry
 
         Args:
             article_id (int): Article ID to modify
             title (str): New title of the article
-            content (str): New content of the article
+            content_path (str): Path to the HTML path of the article
         """
         self._setup_connection()
-        update_query = 'UPDATE articles SET title=%s, content=%s WHERE article_id=%s'
-        row = (title, content, article_id)
+        query_list = ['UPDATE articles']
+        
+        row_list = []
+        query_suffix = 'WHERE article_id=%s'
+        if title:
+            query_list.append('title=%s')
+            row_list.append(title)
+        if content_path:
+            query_list.append('SET content_path=%s')
+            row_list.append(content_path)
+        query_list.append(query_suffix)
+        row_list.append(article_id)
+        
+        update_query = ' '.join(query_list)
+        row = tuple(row_list)
+                
         self.cursor.execute(update_query, row)
         self.conn.commit()
         self._close_connection()
