@@ -120,22 +120,23 @@ class Database:
             content_path (str): Path to the HTML path of the article
         """
         self._setup_connection()
-        query_list = ['UPDATE articles']
+        query_prefix = 'UPDATE articles SET'
+        query_suffix = 'WHERE article_id=%s'
         
         row_list = []
-        query_suffix = 'WHERE article_id=%s'
+        set_list = []
         if title:
-            query_list.append('title=%s')
+            set_list.append('title=%s')
             row_list.append(title)
         if content_path:
-            query_list.append('SET content_path=%s')
+            set_list.append('content_path=%s')
             row_list.append(content_path)
-        query_list.append(query_suffix)
         row_list.append(article_id)
         
-        update_query = ' '.join(query_list)
+        set_query = ', '.join(set_list)        
+        update_query = ' '.join([query_prefix, set_query, query_suffix])
         row = tuple(row_list)
-                
+                        
         self.cursor.execute(update_query, row)
         self.conn.commit()
         self._close_connection()
